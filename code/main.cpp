@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "./log/log.h"
+#include "const.h"
 
 int main() {
-    Log::Instance()->init();
-    LOG_INFO("Hello World! ");
+    auto cfg = ConfigMgr::Instance();
+    std::cout << cfg["Mysql"]["Host"] << std::endl;
 }

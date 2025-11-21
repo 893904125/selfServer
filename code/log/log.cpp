@@ -109,7 +109,7 @@ void Log::write(int level, const char *format, ...) {
     }
 
     {
-        std::unique_lock locker(mutex_);
+        std::unique_lock<std::mutex>locker(mutex_);
         lineCount_++;
 
         int n = snprintf(buffer_.BeginWrite(), 128, "%d-%02d-%02d %02d:%02d:%02d.%06ld ",

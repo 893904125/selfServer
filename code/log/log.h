@@ -12,6 +12,7 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <stdarg.h>
+#include <sys/time.h>
 
 class Log {
 public:

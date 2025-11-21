@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <cstring>
 #include <sys/uio.h>
+#include <unistd.h>
 class Buffer {
 public:
     Buffer(int initBufferSize = 1024);
