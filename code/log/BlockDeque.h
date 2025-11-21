@@ -150,6 +150,9 @@ template<class T>
 bool BlockDeque<T>::pop(T &item) {
     std::unique_lock<std::mutex> locker(mtx_);
     while (deq_.empty()) {
+        if (isClose_) {
+            return false;
+        }
         condConsumer_.wait(locker);
         if (isClose_) {
             return false;
@@ -166,6 +169,9 @@ template<class T>
 bool BlockDeque<T>::pop(T &item, int timeout) {
     std::unique_lock<std::mutex> locker(mtx_);
     while (deq_.empty()) {
+        if (isClose_) {
+            return false;
+        }
         if(condConsumer_.wait_for(locker, std::chrono::seconds(timeout))
                == std::cv_status::timeout){
             return false;

@@ -4,6 +4,5 @@
 
 int main() {
     Log::Instance()->init();
-    LOG_INFO("Hello World!");
-
+    LOG_INFO("Hello World! ");
 }
