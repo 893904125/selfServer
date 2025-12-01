@@ -165,7 +165,7 @@ bool WebServer::InitSocket_() {
 
 void WebServer::InitEpollEventMode_(int trigMode) {
     listenEvent_ |= EPOLLRDHUP;
-    /* EPOLLONESHOT 保证任何时刻，一个socket只能被一个线程拥有，要记得重置*/
+    /* EPOLLONESHOT 保证任何时刻，一个socket只能被一个线程拥有，一定要记得重置不然这个soket就只能等死了*/
     connEvent_ |= EPOLLONESHOT | EPOLLRDHUP;
     switch (trigMode) {
         case 0:
@@ -209,7 +209,7 @@ void WebServer::DealListen_() {
             return;
         }
         AddClient_(fd, addr);
-    }while (listenEvent_ & EPOLLIN);
+    }while (listenEvent_ & EPOLLET);
 }
 
 void WebServer::DealRead_(HttpConn *client) {
@@ -268,6 +268,7 @@ void WebServer::OnProcess(HttpConn *client) {
     //如果process返回true， 代表HTTP请求解析成功，且相应报文准备好了
     if (client->process()) {
         //注册EPOLLOUT事件，让主线程监听“可写事件”，把相应返回给客服端
+        //！！！这里还包含了EPOLLIN的重置
         epoller_->ModFd(client->GetFd(), EPOLLOUT | connEvent_);
     }else {
         //返回false; 接收到的请求数据不完整，注册EPOLLIN继续接收
@@ -292,13 +293,13 @@ void WebServer::ExtentTime_(HttpConn *client) const {
 /* 添加连接，把连接放到epoll中 */
 void WebServer::AddClient_(int fd, sockaddr_in addr) {
     assert(fd > 0);
-    // 1. 把连接插入map中
+    // 1. 把连接插入map中,管理连接者的文件描述符和ip
     users_[fd].init(fd, addr);
     // 2. 添加定时器
     if (timeoutMs_ > 0) {
         timer_->add(fd, timeoutMs_, std::bind(&WebServer::CloseConn_, this, &users_[fd]));
     }
-    // 3. 添加epoll监听
+    // 3. 添加epoll监听，监听客服端请求
     epoller_->AddFd(fd, EPOLLIN | connEvent_);
     // 4. 设置fd为非阻塞模式
     SetFdNonBlock_(fd);

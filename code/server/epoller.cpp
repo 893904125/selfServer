@@ -41,12 +41,12 @@ int Epoller::Wait(int timeoutMs) {
 }
 
 uint32_t Epoller::GetEvent(int i) {
-    assert(0 < i && i < events_.size());
+    assert(0 <= i && i < events_.size());
     return events_[i].events;
 }
 
 int Epoller::GetEventFd(int i) {
-    assert(0 < i && i < events_.size());
+    assert(0 <= i && i < events_.size());
     return events_[i].data.fd;
 }
 

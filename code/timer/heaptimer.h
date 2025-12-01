@@ -36,7 +36,8 @@ struct TimerNode {
 
 class HeapTimer {
 public:
-    HeapTimer():heap_(64) {}
+    /*告诉 vector 预留 64 个位置的内存，避免频繁扩容，但不要真正创建*/
+    HeapTimer() {heap_.reserve(64);}
     ~HeapTimer() {clear();};
 
     void add(int id, int timeout,const TimerOutCallBack& cb);
