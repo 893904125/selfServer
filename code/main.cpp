@@ -1,8 +1,7 @@
-#include <iostream>
-
-#include "const.h"
+#include "server/webserver.h"
 
 int main() {
-    auto cfg = ConfigMgr::Instance();
-    std::cout << cfg["Mysql"]["Host"] << std::endl;
+    WebServer(1316, 3, 60000, false, 12,
+        true, 1, 1024).Start();
+
 }

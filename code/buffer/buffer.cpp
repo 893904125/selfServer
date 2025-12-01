@@ -55,6 +55,13 @@ void Buffer::RetrieveAll() {
     writePos_ = 0;
 }
 
+void Buffer::RetrieveUntil(const char *end) {
+    assert(Peek() <= end);
+    Retrieve(end - Peek());
+}
+
+
+
 std::string Buffer::RetrieveAllToStr() {
     std::string str(Peek(), ReadableBytes());
     RetrieveAll();

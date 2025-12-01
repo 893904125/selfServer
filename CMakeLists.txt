@@ -24,6 +24,7 @@ include_directories(
         code/log
         code/buffer
         code/config
+        code/pool
         code
 )
 
@@ -32,20 +33,28 @@ include_directories(
 add_executable(selfServer
         code/main.cpp
         code/log/log.cpp
-        # code/log/log.h  <-- 头文件通常不需要加到 add_executable 里，虽然加了也不报错
+        code/log/log.h
         code/buffer/buffer.cpp
-        # code/buffer/buffer.h
+        code/buffer/buffer.h
+        code/log/BlockDeque.h
 
-        # 注意：请确认你本地文件名是 BlockDeque.h 还是 blockqueue.h
-        # code/log/BlockDeque.h
-
+        code/pool/SqlConnPool.cpp
+        code/pool/SqlConnPool.h
         code/server/epoller.cpp
-        # code/server/epoller.h
-
-        # 注意：请确认你本地是否有这些 Config 文件
+        code/server/epoller.h
+        code/timer/heaptimer.cpp
+        code/timer/heaptimer.h
         code/config/ConfigMgr.cpp
-        code/const.h
-        # code/config/ConfigMgr.h
+        code/config/ConfigMgr.h
+        code/server/webserver.cpp
+        code/server/webserver.h
+        code/pool/ThreadPool.h
+        code/http/httpconn.cpp
+        code/http/httpconn.h
+        code/http/httprequest.cpp
+        code/http/httprequest.h
+        code/http/httpresponse.cpp
+        code/http/httpresponse.h
 )
 
 # 5. 链接库
@@ -53,6 +62,8 @@ target_link_libraries(selfServer
         Threads::Threads      # 必须链接线程库
         Boost::system
         Boost::filesystem
+        mysqlclient
+        pthread
         ${Boost_LIBRARIES}    # 链接 Boost
 )
 

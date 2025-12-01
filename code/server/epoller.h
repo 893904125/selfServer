@@ -8,6 +8,17 @@
 #include <sys/epoll.h>
 #include <vector>
 #include <assert.h>
+
+/*
+ *Epoll 有两种工作模式
+ *LT(Level Triggered) 水平触发
+ *  - 数据到内核缓存区时，只要数据可读，就会一直通知。不用担心漏掉数据，稳定。
+ *  - 但并发量提高了，无效的通知会增多，性能会有所下降。
+ *ET(Edge Triggered) 边缘触发
+ *  - 内核只在状态变化的时候通知一次，减少系统通知的次数，比较高效
+ *  - 但需要处理边界情况。
+ *
+ */
 class Epoller{
 public:
     explicit Epoller(int maxSize = 1024);

@@ -29,6 +29,7 @@ public:
 
     void Retrieve(size_t len);
     void RetrieveAll();
+    void RetrieveUntil(const char* end);
     std::string RetrieveAllToStr();
 
     void Append(const std::string &str);
